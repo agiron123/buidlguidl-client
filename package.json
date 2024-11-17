@@ -13,6 +13,7 @@
     "axios": "^1.7.2",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.11.0",
+    "dotenv": "^16.4.5",
     "https": "^1.0.0",
     "macaddress": "^0.5.3",
     "minimist": "^1.2.8",
@@ -22,6 +23,7 @@
     "readline-sync": "^1.4.10",
     "simple-git": "^3.26.0",
     "systeminformation": "^5.22.8",
+    "telegraf": "^4.16.3",
     "viem": "^2.13.3",
     "ws": "^8.15.0"
   },

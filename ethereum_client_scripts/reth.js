@@ -1,3 +1,6 @@
+import { Telegraf } from "telegraf";
+import { message } from "telegraf/filters";
+import dotenv from "dotenv";
 import pty from "node-pty";
 import fs from "fs";
 import os from "os";
@@ -5,6 +8,9 @@ import path from "path";
 import { debugToFile } from "../helpers.js";
 import { stripAnsiCodes, getFormattedDateTime } from "../helpers.js";
 import minimist from "minimist";
+
+// load environment variables from .env file
+dotenv.config();
 
 let installDir = os.homedir();
 
@@ -38,6 +44,27 @@ const logFilePath = path.join(
 
 const logStream = fs.createWriteStream(logFilePath, { flags: "a" });
 
+console.log('Setting up Telegram Bot');
+
+// Initialize the telegraf bot, and send message to user that the reth process has started
+
+// TODO: load token from .env properly.
+const botToken = "7925620647:AAH5l47-xwI4SwodX0zp32upb2QQm8F6PKo"
+
+const bot = new Telegraf(botToken);
+bot.start((ctx) => ctx.reply("EthMonitoring Bot starting reth process ..."));
+bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+bot.command('nodes', (ctx) => ctx.reply('checking status ...'));
+bot.command('tokens', (ctx) => ctx.reply('Getting token list summary ...'));
+bot.command('addToken', (ctx) => ctx.reply('Adding token to the white list ...'));
+bot.command('removeToken', (ctx) => ctx.reply('Removing token from the white list ...'));
+bot.launch();
+
+// Handle graceful stop of the telegraf bot.
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+const rethDataDir = path.join(installDir, "ethereum_clients", "reth", "database");
 const execution = pty.spawn(
   `${rethCommand}`,
   [
@@ -62,7 +89,7 @@ const execution = pty.spawn(
     "--authrpc.port",
     "8551",
     "--datadir",
-    path.join(installDir, "ethereum_clients", "reth", "database"),
+    `${rethDataDir}`,
     "--authrpc.jwtsecret",
     `${jwtPath}`,
     "--metrics",
