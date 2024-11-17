@@ -6,12 +6,15 @@ import { installDir } from "../commandLineOptions.js";
 import { debugToFile } from "../helpers.js";
 
 export const latestGethVer = "1.14.3";
-export const latestRethVer = "1.0.0";
+export const latestRethVer = "1.1.1";
 export const latestLighthouseVer = "5.3.0";
 
-// export const latestGethVer = "1.14.3";
-// export const latestRethVer = "1.0.0";
-// export const latestLighthouseVer = "5.2.0";
+// Use this to update the client.
+// installMacLinuxExecutionClient(
+//   "reth",
+//   "linux",
+//   latestGethVer,
+//   latestRethVer);
 
 export function installMacLinuxExecutionClient(
   executionClient,
@@ -79,6 +82,8 @@ export function installMacLinuxExecutionClient(
   } else if (executionClient === "reth") {
     const rethDir = path.join(installDir, "ethereum_clients", "reth");
     const rethScript = path.join(rethDir, "reth");
+
+    console.log('rethScript: ', rethScript);
     if (!fs.existsSync(rethScript)) {
       console.log("\nInstalling Reth.");
       if (!fs.existsSync(rethDir)) {
